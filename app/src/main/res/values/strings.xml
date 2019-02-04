@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyStudID</string>
+    <string name="matriculation_number">Matriculation nr.:</string>
+    <string name="error_nfc_not_supported">NFC not supported</string>
+    <string name="error_mifare_not_supported_or_wrong_tag">Mifare not supported or wrong Tag</string>
+    <string name="error_wrong_tag">Wrong Card</string>
+    <string name="error_unknown">Unknown</string>
+    <string name="error">Error</string>
+    <string name="start_guideline">Please touch your card on the back of your phone</string>
+</resources>
