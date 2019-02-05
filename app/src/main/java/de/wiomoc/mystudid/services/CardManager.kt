@@ -5,6 +5,7 @@ import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.nfc.tech.MifareClassic
 import android.support.annotation.StringRes
+import android.util.Log
 import de.wiomoc.mystudid.R
 import de.wiomoc.mystudid.activities.MainActivity
 import org.jetbrains.anko.doAsync
@@ -22,14 +23,14 @@ object CardManager {
                 arrayOf(IntentFilter().apply {
                     addAction(NfcAdapter.ACTION_TAG_DISCOVERED)
                     addAction(NfcAdapter.ACTION_TECH_DISCOVERED)
-                }), arrayOf(arrayOf(MifareClassic::javaClass.name)))
+                }), arrayOf(arrayOf(MifareClassic::class.java.name)))
         true
     } ?: false
 
 
     fun disableForegroundDispatch(activity: MainActivity) = activity.nfcManager.defaultAdapter?.disableForegroundDispatch(activity)
 
-    data class CardContent(val matriculationNumber: Int, val credit: Float, val validFrom: Date, val validUntil: Date)
+    data class CardContent(val matriculationNumber: Int, val credit: Float, val validFrom: Date, val validUntil: Date, val lastDespositDate: Date, val lastDespositAmount: Float)
 
     enum class CardError(@StringRes val stringId: Int) {
         NFC_NOT_SUPPORTED(R.string.error_nfc_not_supported),
@@ -91,12 +92,22 @@ object CardManager {
                 //Read Transactions
                 tag.authenticateSectorWithKeyA(2,
                         byteArrayOf(0xf3.toByte(), 0x81.toByte(), 0x8f.toByte(), 0xa2.toByte(), 0x31.toByte(), 0xd6.toByte()))
+                val blockLastDeposit = tag.readBlock(8)
+
+                val lastDepositDate = Date((blockLastDeposit[4].toUByte().toInt() shl 8 or blockLastDeposit[5].toUByte().toInt()) - 1900,
+                        blockLastDeposit[3] - 1,
+                        blockLastDeposit[2].toInt(),
+                        blockLastDeposit[6].toInt(),
+                        blockLastDeposit[7].toInt())
+                val lastDepositAmount = (blockLastDeposit[10].toUByte().toInt() shl 8 or blockLastDeposit[11].toUByte().toInt()) / 100.0f
 
 
+                Log.d("Deposit", "D" + lastDepositDate + ", " + lastDepositAmount)
                 uiThread {
-                    callback.onSuccess(CardContent(matriculationNumber, credit, validFrom, validUntil))
+                    callback.onSuccess(CardContent(matriculationNumber, credit, validFrom, validUntil, lastDepositDate, lastDepositAmount))
                 }
             } catch (e: IOException) {
+                e.printStackTrace()
                 uiThread {
                     callback.onError(CardManager.CardError.UNKNOWN)
                 }
