@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity(), CardManager.CardCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if(intent.action != NfcAdapter.ACTION_TAG_DISCOVERED) {
+        if (!handleIntent(intent)) {
             fragmentManager.beginTransaction()
                     .replace(R.id.activity_main_fragment_container, StartFragment())
                     .commit()
@@ -36,18 +36,23 @@ class MainActivity : AppCompatActivity(), CardManager.CardCallback {
         CardManager.disableForegroundDispatch(this)
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        if (intent?.action == NfcAdapter.ACTION_TAG_DISCOVERED) {
-            val tag: Tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
-            if (tag.techList.contains(MifareClassic::javaClass.name)) {
-                CardManager.handleTag(MifareClassic.get(tag), this)
-                return
-            } else {
-                onError(CardManager.CardError.MIFARE_NOT_SUPPORTED_OR_WRONG_TAG)
-            }
+    override fun onNewIntent(intent: Intent) {
+        if (!handleIntent(intent)) {
+            super.onNewIntent(intent)
         }
-        super.onNewIntent(intent)
     }
+
+    fun handleIntent(intent: Intent) =
+            if (intent.action == NfcAdapter.ACTION_TAG_DISCOVERED || intent.action == NfcAdapter.ACTION_TECH_DISCOVERED) {
+                val tag: Tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
+                MifareClassic.get(tag)?.let {
+                    CardManager.handleTag(it, this)
+                } ?: onError(CardManager.CardError.MIFARE_NOT_SUPPORTED_OR_WRONG_TAG)
+                true
+            } else {
+                false
+            }
+
 
     override fun onSuccess(content: CardManager.CardContent) {
         fragmentManager.beginTransaction()

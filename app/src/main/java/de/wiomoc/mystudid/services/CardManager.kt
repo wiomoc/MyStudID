@@ -19,7 +19,10 @@ object CardManager {
     fun enableForegroundDispatch(activity: MainActivity) = activity.nfcManager.defaultAdapter?.let {
         it.enableForegroundDispatch(activity,
                 PendingIntent.getActivity(activity, 0, activity.intentFor<MainActivity>(), 0),
-                arrayOf(IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED)), arrayOf(arrayOf(MifareClassic::class.java.name)))
+                arrayOf(IntentFilter().apply {
+                    addAction(NfcAdapter.ACTION_TAG_DISCOVERED)
+                    addAction(NfcAdapter.ACTION_TECH_DISCOVERED)
+                }), arrayOf(arrayOf(MifareClassic::javaClass.name)))
         true
     } ?: false
 
@@ -47,9 +50,9 @@ object CardManager {
         var i = range.last
         var current = 1;
         while (i >= range.first) {
-            out += (this[i].toInt().and(0x0F)) * current;
+            out += (this[i].toUByte().toInt().and(0x0F)) * current;
             current *= 10;
-            out += (this[i].toInt().shr(4)) * current;
+            out += (this[i].toUByte().toInt().shr(4)) * current;
             current *= 10;
             i--
         }
@@ -66,24 +69,29 @@ object CardManager {
                         byteArrayOf(0xac.toByte(), 0x87.toByte(), 0xbe.toByte(), 0x83.toByte(), 0x92.toByte(), 0x4e.toByte()))
 
                 val blockCredit = tag.readBlock(4)
-                val credit = (blockCredit[0].toInt() and (blockCredit[1].toInt() shl 8)) / 1000.0f
+                val credit = (blockCredit[0].toUByte().toInt() or (blockCredit[1].toUByte().toInt() shl 8)) / 100.0f
 
                 //Read MatriculationNumber, ValidFrom, Valid Until
                 tag.authenticateSectorWithKeyA(3,
                         byteArrayOf(0xcd.toByte(), 0xee.toByte(), 0x63.toByte(), 0x1b.toByte(), 0xb3.toByte(), 0x7e.toByte()))
 
-                val blockValidFrom = tag.readBlock(12)
-                val validFrom = Date(blockValidFrom.toIntFromBCD(2..3),
-                        blockValidFrom.toIntFromBCD(1..1),
+                val blockValidFrom = tag.readBlock(14)
+                val validFrom = Date(blockValidFrom.toIntFromBCD(2..3) - 1900,
+                        blockValidFrom.toIntFromBCD(1..1) - 1,
                         blockValidFrom.toIntFromBCD(0..0))
 
-                val blockValidUntil = tag.readBlock(14)
-                val validUntil = Date(blockValidUntil.toIntFromBCD(2..3),
-                        blockValidUntil.toIntFromBCD(1..1),
+                val blockValidUntil = tag.readBlock(12)
+                val validUntil = Date(blockValidUntil.toIntFromBCD(2..3) - 1900,
+                        blockValidUntil.toIntFromBCD(1..1) - 1,
                         blockValidUntil.toIntFromBCD(0..0))
 
                 val blockMatriculationNumber = tag.readBlock(13)
                 val matriculationNumber = blockMatriculationNumber.toIntFromBCD(1..6)
+
+                //Read Transactions
+                tag.authenticateSectorWithKeyA(2,
+                        byteArrayOf(0xf3.toByte(), 0x81.toByte(), 0x8f.toByte(), 0xa2.toByte(), 0x31.toByte(), 0xd6.toByte()))
+
 
                 uiThread {
                     callback.onSuccess(CardContent(matriculationNumber, credit, validFrom, validUntil))
