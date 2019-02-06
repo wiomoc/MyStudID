@@ -4,10 +4,12 @@ import android.app.PendingIntent
 import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.nfc.tech.MifareClassic
+import android.os.Parcelable
 import android.support.annotation.StringRes
 import android.util.Log
 import de.wiomoc.mystudid.R
 import de.wiomoc.mystudid.activities.MainActivity
+import kotlinx.android.parcel.Parcelize
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.nfcManager
@@ -30,9 +32,16 @@ object CardManager {
 
     fun disableForegroundDispatch(activity: MainActivity) = activity.nfcManager.defaultAdapter?.disableForegroundDispatch(activity)
 
-    data class CardContent(val matriculationNumber: Int, val credit: Float, val validFrom: Date, val validUntil: Date, val lastDespositDate: Date, val lastDespositAmount: Float)
+    @Parcelize
+    data class CardContent(val matriculationNumber: Int,
+                           val credit: Float,
+                           val validFrom: Date,
+                           val validUntil: Date,
+                           val lastDespositDate: Date,
+                           val lastDespositAmount: Float) : Parcelable
 
-    enum class CardError(@StringRes val stringId: Int) {
+    @Parcelize
+    enum class CardError(@StringRes val stringId: Int) : Parcelable {
         NFC_NOT_SUPPORTED(R.string.error_nfc_not_supported),
         MIFARE_NOT_SUPPORTED_OR_WRONG_TAG(R.string.error_mifare_not_supported_or_wrong_tag),
         WRONG_TAG(R.string.error_wrong_tag),
@@ -101,8 +110,6 @@ object CardManager {
                         blockLastDeposit[7].toInt())
                 val lastDepositAmount = (blockLastDeposit[10].toUByte().toInt() shl 8 or blockLastDeposit[11].toUByte().toInt()) / 100.0f
 
-
-                Log.d("Deposit", "D" + lastDepositDate + ", " + lastDepositAmount)
                 uiThread {
                     callback.onSuccess(CardContent(matriculationNumber, credit, validFrom, validUntil, lastDepositDate, lastDepositAmount))
                 }

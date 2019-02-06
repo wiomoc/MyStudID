@@ -11,33 +11,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/label_valid_to" android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toStartOf="@+id/tv_valid_until"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp" android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintTop_toBottomOf="@+id/label_valid_from"/>
     <TextView
             android:text="Last Deposit Date:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/label_last_deposit_date" android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toStartOf="@+id/tv_valid_until"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/label_valid_to"/>
     <TextView
             android:text="Last Deposit Amount:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/label_last_deposit_amount" android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toStartOf="@+id/tv_valid_until"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/label_last_deposit_date"
     />
     <TextView
             android:layout_width="149dp"
             android:layout_height="59dp"
-            android:id="@+id/tv_available_credit" android:textSize="36sp" app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/tv_available_credit" android:textSize="44sp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp" app:layout_constraintHorizontal_bias="0.502"
@@ -51,25 +49,26 @@
             android:layout_height="wrap_content"
             android:id="@+id/label_matriculation_number"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+            android:layout_marginLeft="32dp" android:layout_marginStart="32dp"
             android:layout_marginTop="52dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_available_credit" android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/tv_valid_until" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" app:layout_constraintHorizontal_bias="0.318"/>
+    />
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_valid_until"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="80dp" android:layout_marginRight="80dp" tools:text="31.12.2019"
+            android:layout_marginEnd="32dp" android:layout_marginRight="32dp" tools:text="31.12.2019"
             android:textSize="18sp" android:textStyle="bold"
-            android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/tv_valid_from"/>
+            android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/tv_valid_from"
+            android:focusable="true" android:clickable="true"
+            android:focusableInTouchMode="true"/>
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_last_deposite_date"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="80dp" android:layout_marginRight="80dp" tools:text="10.11.2019"
+            android:layout_marginEnd="32dp" android:layout_marginRight="32dp" tools:text="10.11.2019 10:20"
             android:textSize="18sp" android:textStyle="bold"
             android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/tv_valid_until"/>
     <TextView
@@ -77,7 +76,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_last_deposit_amount"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="80dp" android:layout_marginRight="80dp" tools:text="15,00€"
+            android:layout_marginEnd="32dp" android:layout_marginRight="32dp" tools:text="15,00€"
             android:textSize="18sp" android:textStyle="bold"
             android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/tv_last_deposite_date"/>
     <TextView
@@ -85,7 +84,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_valid_from"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="80dp" android:layout_marginRight="80dp" tools:text="01.02.2018"
+            android:layout_marginEnd="32dp" android:layout_marginRight="32dp" tools:text="01.02.2018"
             android:textSize="18sp" android:textStyle="bold" android:layout_marginTop="24dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_matriculation_number"/>
     <TextView
@@ -93,7 +92,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/tv_matriculation_number" android:layout_marginTop="52dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_available_credit" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="80dp" android:layout_marginRight="80dp" tools:text="379826"
+            android:layout_marginEnd="32dp" android:layout_marginRight="32dp" tools:text="379826"
             android:textSize="18sp" android:textStyle="bold"/>
     <TextView
             android:text="Valid from:"
@@ -101,7 +100,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/label_valid_from" android:textSize="18sp"
             android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/label_matriculation_number"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toStartOf="@+id/tv_valid_until"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp"
+    />
 </android.support.constraint.ConstraintLayout>

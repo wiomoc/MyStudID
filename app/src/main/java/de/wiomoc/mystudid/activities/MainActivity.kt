@@ -11,13 +11,15 @@ import de.wiomoc.mystudid.R
 import de.wiomoc.mystudid.fragments.CardErrorFragment
 import de.wiomoc.mystudid.fragments.StartFragment
 import de.wiomoc.mystudid.services.CardManager
+import org.jetbrains.anko.bundleOf
+import org.jetbrains.anko.withArguments
 import java.util.*
 
 class MainActivity : AppCompatActivity(), CardManager.CardCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (!handleIntent(intent)) {
+        if (!handleIntent(intent) && savedInstanceState == null) {
             fragmentManager.beginTransaction()
                     .replace(R.id.activity_main_fragment_container, StartFragment())
                     .commit()
@@ -56,13 +58,13 @@ class MainActivity : AppCompatActivity(), CardManager.CardCallback {
 
     override fun onSuccess(content: CardManager.CardContent) {
         fragmentManager.beginTransaction()
-                .replace(R.id.activity_main_fragment_container, CardContentFragment(content))
+                .replace(R.id.activity_main_fragment_container, CardContentFragment.newInstance(content))
                 .commit()
     }
 
     override fun onError(error: CardManager.CardError) {
         fragmentManager.beginTransaction()
-                .replace(R.id.activity_main_fragment_container, CardErrorFragment(error))
+                .replace(R.id.activity_main_fragment_container, CardErrorFragment.newInstance(error))
                 .commit()
     }
 }
