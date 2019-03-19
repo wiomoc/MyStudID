@@ -2,9 +2,9 @@ package de.wiomoc.mystudid.services
 
 import org.junit.Assert
 import org.junit.Test
-import de.wiomoc.mystudid.services.CardManager.toIntFromBCD
+import de.wiomoc.mystudid.services.MifareCardManager.toIntFromBCD
 
-class CardManagerTest {
+class MifareCardManagerTest {
 
     @Test
     fun testBcdFormating() {

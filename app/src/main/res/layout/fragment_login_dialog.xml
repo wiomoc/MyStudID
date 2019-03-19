@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              tools:context=".fragments.LoginDialogFragment">
+
+    <TextView
+            android:text="Login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/label_login" android:layout_weight="1"
+            android:gravity="center" android:textSize="30sp" android:textStyle="bold"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/te_card_number" android:layout_weight="1" android:hint="Cardnumber"
+            tools:text="12322432423" android:layout_margin="10dp"/>
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/te_password" android:layout_weight="1" tools:text="ABCD" android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" android:layout_marginBottom="10dp" android:hint="Password"/>
+</LinearLayout>

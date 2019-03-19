@@ -2,32 +2,46 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="de.wiomoc.mystudid">
 
-    <uses-permission android:name="android.permission.NFC" android:required="true"/>
+    <uses-permission android:name="android.permission.NFC"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
+            android:screenOrientation="portrait"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait">
-        <activity android:name=".activities.MainActivity"
-                  android:launchMode="singleTop"
-                  android:configChanges="orientation|keyboardHidden|keyboard">
+            android:theme="@style/AppTheme">
+        <activity
+                android:name=".activities.MainActivity"
+                android:configChanges="orientation|keyboardHidden|keyboard"
+                android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED"/>
             </intent-filter>
 
-            <meta-data android:name="android.nfc.action.TECH_DISCOVERED"
-                       android:resource="@xml/nfc_tech_filter"/>
-
+            <meta-data
+                    android:name="android.nfc.action.TECH_DISCOVERED"
+                    android:resource="@xml/nfc_tech_filter"/>
+        </activity>
+        <activity
+                android:name=".activities.HistoryActivity"
+                android:label="@string/title_activity_history"
+                android:parentActivityName=".activities.MainActivity"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="de.wiomoc.mystudid.activities.MainActivity"/>
+        </activity>
+        <activity
+                android:name=".activities.SettingsActivity"
+                android:label="@string/title_activity_settings">
         </activity>
     </application>
 

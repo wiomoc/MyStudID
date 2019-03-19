@@ -1,12 +1,15 @@
 package de.wiomoc.mystudid.services
 
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.nfc.tech.MifareClassic
+import android.os.Build
 import android.os.Parcelable
-import android.support.annotation.StringRes
-import android.util.Log
+import androidx.annotation.StringRes
 import de.wiomoc.mystudid.R
 import de.wiomoc.mystudid.activities.MainActivity
 import kotlinx.android.parcel.Parcelize
@@ -17,7 +20,7 @@ import org.jetbrains.anko.uiThread
 import java.io.IOException
 import java.util.*
 
-object CardManager {
+object MifareCardManager {
 
     fun enableForegroundDispatch(activity: MainActivity) = activity.nfcManager.defaultAdapter?.let {
         it.enableForegroundDispatch(activity,
@@ -31,6 +34,29 @@ object CardManager {
 
 
     fun disableForegroundDispatch(activity: MainActivity) = activity.nfcManager.defaultAdapter?.disableForegroundDispatch(activity)
+
+    fun subscribeNfcStatusChanges(context: Context, callback: (nfcEnabled: Boolean) -> Unit): BroadcastReceiver? {
+        callback(context.nfcManager.defaultAdapter?.isEnabled ?: false)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            val broadcastReceiver = object : BroadcastReceiver() {
+                override fun onReceive(context: Context?, intent: Intent?) {
+                    callback(context?.nfcManager?.defaultAdapter?.isEnabled ?: false)
+                }
+            }
+
+            context.registerReceiver(broadcastReceiver,
+                    IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED))
+            broadcastReceiver
+        } else {
+            null;
+        }
+    }
+
+    fun unsubscribeNfcStatusChanges(context: Context, broadcastReceiver: BroadcastReceiver?) {
+        broadcastReceiver?.let {
+            context.unregisterReceiver(it)
+        }
+    }
 
     @Parcelize
     data class CardContent(val matriculationNumber: Int,
@@ -116,7 +142,7 @@ object CardManager {
             } catch (e: IOException) {
                 e.printStackTrace()
                 uiThread {
-                    callback.onError(CardManager.CardError.UNKNOWN)
+                    callback.onError(MifareCardManager.CardError.UNKNOWN)
                 }
             } finally {
                 tag.close()
