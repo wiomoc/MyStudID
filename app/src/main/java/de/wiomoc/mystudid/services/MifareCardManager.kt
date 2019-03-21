@@ -45,7 +45,7 @@ object MifareCardManager {
             }
 
             context.registerReceiver(broadcastReceiver,
-                    IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED))
+                    IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED))?:return null
             broadcastReceiver
         } else {
             null;

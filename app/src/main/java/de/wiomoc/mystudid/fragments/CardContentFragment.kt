@@ -26,8 +26,8 @@ class CardContentFragment : Fragment() {
                     find<TextView>(R.id.tv_matriculation_number).text = cardContent.matriculationNumber.toString()
                     find<TextView>(R.id.tv_valid_from).text = dateFormatter.format(cardContent.validFrom)
                     find<TextView>(R.id.tv_valid_until).text = dateFormatter.format(cardContent.validUntil)
-                    find<TextView>(R.id.tv_valid_until).error = "Läuft bald ab"
-                    find<TextView>(R.id.tv_valid_until).requestFocus()
+                    //find<TextView>(R.id.tv_valid_until).error = "Läuft bald ab"
+                    //find<TextView>(R.id.tv_valid_until).requestFocus()
                     find<TextView>(R.id.tv_last_deposite_date).text = dateTimeFormatter.format(cardContent.lastDespositDate)
                     find<TextView>(R.id.tv_last_deposit_amount).text = String.format("%.2f€", cardContent.lastDespositAmount)
                 }
