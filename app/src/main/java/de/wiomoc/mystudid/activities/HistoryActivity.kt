@@ -84,11 +84,11 @@ class HistoryActivity : AppCompatActivity(), LoginDialogFragment.LoginDialogCall
         binding.rwHistory.adapter = Adapter().also { adapter ->
             Pager(
                 PagingConfig(10),
-                this.initialLoadKey,
+                null,
                 HistoryDatabase.dao.getAllTransactions().asPagingSourceFactory(Dispatchers.IO)
-            ).liveData.build()
+            ).liveData
                 .observe(this) {
-                    adapter.submitData(lifecycle, PagingData.from(it.snapshot()))
+                    adapter.submitData(lifecycle, it)
                 }
         }
 
