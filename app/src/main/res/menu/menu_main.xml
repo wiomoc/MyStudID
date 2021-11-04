@@ -5,11 +5,9 @@
     <item android:id="@+id/action_history"
           android:title="History"
           android:icon="@drawable/ic_history"
-          android:showAsAction="always"
           app:showAsAction="always"/>
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
           android:icon="@drawable/ic_settings"
-          app:showAsAction="always"
-          android:showAsAction="always"/>
+          app:showAsAction="always"/>
 </menu>

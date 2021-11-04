@@ -1,6 +1,5 @@
 package de.wiomoc.mystudid.services
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
 import okhttp3.OkHttpClient
@@ -10,7 +9,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 object OnlineCardClient {
 
@@ -34,8 +32,10 @@ object OnlineCardClient {
 
     val dateQueryFormatter = SimpleDateFormat("dd.MM.yyyy")
 
-    data class LoginCredentials(@SerializedName("BenutzerID") val cardNumber: String,
-                                @SerializedName("Passwort") val password: String)
+    data class LoginCredentials(
+        @SerializedName("BenutzerID") val cardNumber: String,
+        @SerializedName("Passwort") val password: String
+    )
 
     data class LoginResponse(@SerializedName("authToken") val authToken: String)
 
@@ -109,8 +109,10 @@ object OnlineCardClient {
         }
     }
 
-    fun transactions(responseCallback: ResponseCallback<Array<Transaction>>,
-                     dateFrom: Date, dateUntil: Date) = ensureAuthToken(responseCallback) {
+    fun transactions(
+        responseCallback: ResponseCallback<Array<Transaction>>,
+        dateFrom: Date, dateUntil: Date = Date()
+    ) = ensureAuthToken(responseCallback) {
         api.transactions(dateQueryFormatter.format(dateFrom), dateQueryFormatter.format(dateUntil))
     }
 

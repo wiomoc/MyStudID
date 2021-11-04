@@ -3,18 +3,19 @@ package de.wiomoc.mystudid.activities
 import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.Tag
-import android.nfc.tech.MifareClassic
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.commit
 import androidx.fragment.app.transaction
-import de.wiomoc.mystudid.fragments.CardContentFragment
 import de.wiomoc.mystudid.R
 import de.wiomoc.mystudid.database.HistoryDatabase
+import de.wiomoc.mystudid.fragments.CardContentFragment
 import de.wiomoc.mystudid.fragments.CardErrorFragment
 import de.wiomoc.mystudid.fragments.LoginDialogFragment
+import de.wiomoc.mystudid.fragments.LoginDialogFragment.Companion.closeLoginDialog
 import de.wiomoc.mystudid.fragments.StartFragment
 import de.wiomoc.mystudid.services.MifareCardManager
 import de.wiomoc.mystudid.services.OnlineCardClient
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity(), MifareCardManager.CardCallback, LoginD
     override fun onResume() {
         super.onResume()
         if (!MifareCardManager.enableForegroundDispatch(this)) {
-            onError(MifareCardManager.CardError.NFC_NOT_SUPPORTED)
+            onError(MifareCardManager.CardError.NFC_NOT_SUPPORTED, null)
         }
     }
 
@@ -52,27 +53,25 @@ class MainActivity : AppCompatActivity(), MifareCardManager.CardCallback, LoginD
         }
     }
 
-    fun handleIntent(intent: Intent) =
-            if (intent.action == NfcAdapter.ACTION_TAG_DISCOVERED || intent.action == NfcAdapter.ACTION_TECH_DISCOVERED) {
-                val tag: Tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
-                MifareClassic.get(tag)?.let {
-                    MifareCardManager.handleTag(it, this)
-                } ?: onError(MifareCardManager.CardError.MIFARE_NOT_SUPPORTED_OR_WRONG_TAG)
-                true
-            } else {
-                false
-            }
+    private fun handleIntent(intent: Intent) =
+        if (intent.action == NfcAdapter.ACTION_TAG_DISCOVERED || intent.action == NfcAdapter.ACTION_TECH_DISCOVERED) {
+            val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)!!
+            MifareCardManager.handleTag(tag, this)
+            true
+        } else {
+            false
+        }
 
 
     override fun onSuccess(content: MifareCardManager.CardContent) {
-        supportFragmentManager.transaction {
+        supportFragmentManager.commit {
             replace(R.id.activity_main_fragment_container, CardContentFragment.newInstance(content))
         }
     }
 
-    override fun onError(error: MifareCardManager.CardError) {
-        supportFragmentManager.transaction {
-            replace(R.id.activity_main_fragment_container, CardErrorFragment.newInstance(error))
+    override fun onError(error: MifareCardManager.CardError, cardNumber: Int?) {
+        supportFragmentManager.commit {
+            replace(R.id.activity_main_fragment_container, CardErrorFragment.newInstance(error, cardNumber))
         }
     }
 
@@ -100,6 +99,7 @@ class MainActivity : AppCompatActivity(), MifareCardManager.CardCallback, LoginD
         OnlineCardClient.login(object : OnlineCardClient.ResponseCallback<OnlineCardClient.LoginResponse> {
             override fun onSuccess(response: OnlineCardClient.LoginResponse) {
                 Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_LONG).show()
+                closeLoginDialog()
                 startActivity(intentFor<HistoryActivity>())
             }
 

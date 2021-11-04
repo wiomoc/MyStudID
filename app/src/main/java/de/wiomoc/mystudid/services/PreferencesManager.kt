@@ -12,9 +12,19 @@ object PreferencesManager {
         sharedPreferences = context.defaultSharedPreferences
     }
 
+    var cardNumber: Int?
+        get() = sharedPreferences?.getString("cardNumber", null)?.toInt()
+        set(value) {
+            sharedPreferences?.edit {
+                putString("cardNumber", value.toString())
+            }
+        }
+
     var loginCredentials: OnlineCardClient.LoginCredentials?
         get() = sharedPreferences?.getString("cardNumber", null)?.let { cardNumber ->
-            OnlineCardClient.LoginCredentials(cardNumber, sharedPreferences!!.getString("password", null)!!)
+            sharedPreferences!!.getString("password", null)?.let { password ->
+                OnlineCardClient.LoginCredentials(cardNumber, password)
+            }
         }
         set(value) {
             sharedPreferences?.edit {

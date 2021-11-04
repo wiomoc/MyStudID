@@ -2,16 +2,21 @@ package de.wiomoc.mystudid.database
 
 import android.content.Context
 import androidx.paging.DataSource
-import androidx.paging.PagedList
 import androidx.room.*
 import java.util.*
 
-@Database(entities = [HistoryDatabase.Transaction::class, HistoryDatabase.TransactionPosition::class], version = 1)
+@Database(
+    entities = [HistoryDatabase.Transaction::class, HistoryDatabase.TransactionPosition::class],
+    version = 1,
+    exportSchema = false
+)
 @TypeConverters(HistoryDatabase.Converters::class)
 abstract class HistoryDatabase : RoomDatabase() {
     @Entity(primaryKeys = ["cardID", "onlineID"], indices = [Index("date"), Index("onlineID", unique = true)])
-    data class Transaction(val cardID: Int = 0, val onlineID: String = "",
-                           val date: Date, val amount: Float?, val location: String)
+    data class Transaction(
+        val cardID: Int = 0, val onlineID: String = "", val date: Date,
+        val amount: Float?, val location: String? = null, var credit: Float? = null
+    )
 
     @Entity(primaryKeys = ["onlineID", "positionID"], indices = [Index("onlineID")],
             foreignKeys = [ForeignKey(entity = Transaction::class, parentColumns = ["onlineID"], childColumns = ["onlineID"], onDelete = ForeignKey.CASCADE)]
@@ -21,15 +26,38 @@ abstract class HistoryDatabase : RoomDatabase() {
 
     @Dao
     interface HistoryDao {
-        @Query("Select * FROM 'transaction'")
+        @Query("Select * FROM 'transaction' ORDER BY `date` DESC")
         fun getAllTransactions(): DataSource.Factory<Int, Transaction>
 
-        @Query("Select Max(date) FROM 'transaction'")
+        @Query("Select * FROM 'transaction' WHERE `credit` IS NULL ORDER BY `date`")
+        fun getAllTransactionsWithoutCredit(): List<Transaction>
+
+        @Query("Select * FROM 'transaction' WHERE `date` > :date AND `cardID` != 0")
+        fun getAllCardTransactionsAfter(date: Date): List<Transaction>
+
+        @Query("Select * FROM 'transaction' WHERE `date` < :date ORDER BY `date` DESC LIMIT 1")
+        fun getTransactionBefore(date: Date): Transaction?
+
+        @Query("Select Max(date) FROM 'transaction' WHERE `onlineID` != \"\"")
         fun getLastOnlineTransactionDate(): Date?
 
-        @Insert(onConflict = OnConflictStrategy.IGNORE)
-        fun insertOnlineTransaction(transaction: List<Transaction>)
+        @Query("Select * FROM 'transaction' ORDER BY `date` DESC LIMIT 1")
+        fun getLastTransaction(): Transaction?
 
+        @Query("Select count(1) where exists (select * from 'transaction')")
+        fun hasTransactions(): Int?
+
+        @Update
+        fun updateTransactions(transactions: List<Transaction>)
+
+        @Insert(onConflict = OnConflictStrategy.IGNORE)
+        fun insertOnlineTransactions(transactions: List<Transaction>)
+
+        @Delete
+        fun deleteTransaction(transaction: Transaction)
+
+        @Query("DELETE FROM 'transaction'")
+        fun deleteAllTransactions()
     }
 
     class Converters {

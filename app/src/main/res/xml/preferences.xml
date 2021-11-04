@@ -1,14 +1,14 @@
 <androidx.preference.PreferenceScreen
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <SwitchPreferenceCompat
-            app:key="notifications"
-            app:title="Enable message notifications"/>
+    <androidx.preference.Preference
+            app:key="deleteTransactionHistory"
+            app:title="Delete Transactionhistory"/>
 
-    <Preference
+    <androidx.preference.PreferenceCategory
             app:key="licenses"
             app:title="Licenses"
-            app:summary="Show Licenses"/>
+            app:layout="@layout/preference_license_title"/>
 
 
 </androidx.preference.PreferenceScreen>

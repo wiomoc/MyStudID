@@ -2,11 +2,19 @@
 <resources>
     <string name="app_name">MyStudID</string>
     <string name="matriculation_number">Matrikelnr.:</string>
+    <string name="card_number">Kartennr.:</string>
     <string name="error_nfc_not_supported">NFC wird auf diesem Gerät nicht unterstützt.</string>
-    <string name="error_mifare_not_supported_or_wrong_tag">NFC wird auf diesem Gerät nicht unterstützt oder falscher Tag</string>
+    <string name="error_mifare_not_supported_or_wrong_tag">NFC wird auf diesem Gerät nicht unterstützt oder falscher
+        Tag
+    </string>
     <string name="error_wrong_tag">Falsche Karte</string>
     <string name="error_unknown">Unbekannter Fehler</string>
     <string name="error">Fehler</string>
     <string name="start_guideline">Berühre den Studentenausweis mit der Rückseite deines Geräts</string>
     <string name="start_guideline_nfc_disabled">Aktiviere bitte NFC um den Studentenausweis auslesen zukönnen</string>
+    <string name="title_activity_history">Verlauf</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="valid_from">Gültig ab:</string>
+    <string name="valid_until">Gültig bis:</string>
 </resources>

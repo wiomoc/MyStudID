@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MyStudID</string>
+    <string name="card_number">Card nr.:</string>
     <string name="matriculation_number">Matriculation nr.:</string>
     <string name="error_nfc_not_supported">NFC not supported</string>
     <string name="error_mifare_not_supported_or_wrong_tag">Mifare not supported or wrong Tag</string>
@@ -11,4 +12,6 @@
     <string name="title_activity_history">History</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="valid_from">Valid from:</string>
+    <string name="valid_until">Valid until:</string>
 </resources>

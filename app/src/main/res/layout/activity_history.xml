@@ -21,10 +21,25 @@
             android:layout_height="match_parent"
             android:layout_marginTop="?attr/actionBarSize">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rw_history"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:orientation="vertical">
+                <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/lc_history"
+                        android:layout_height="200dp"
+                        android:layout_width="match_parent"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rw_history"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
